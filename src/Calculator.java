@@ -1,16 +1,16 @@
-import javax.naming.ldap.PagedResultsControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
 import java.awt.event.ActionListener;
 
-import static sun.text.normalizer.UTF16.append;
+import static java.lang.StrictMath.sqrt;
+
 
 public class Calculator extends JFrame {
 
-    private JTextField display;
+    // Creare butoane + display
 
+    private JTextField display;
     private JButton seven;
     private JButton eight;
     private JButton nine;
@@ -22,25 +22,34 @@ public class Calculator extends JFrame {
     private JButton two;
     private JButton three;
     private JButton impartire;
-    private JButton undo;
-    private JButton curat;
+    private JButton clear;
     private JButton inmultire;
     private JButton parantezaStanga;
     private JButton parantezaDreapta;
     private JButton plus;
     private JButton egal;
     private JButton minus;
+    private JButton inapoi;
+    private JButton square;
+    private JButton radical;
+    private JButton virgula;
+    private JButton procent;
+
+    private double tempSecond = 0.0;
+    private double tempRezult = 0.0;
+    private boolean[] operation = new boolean[10];
 
 
-
-
+    // Main
 
     public static void main(String[] args) {
         new Calculator();
     }
 
+    // Configurare calculator
+
     public Calculator() {
-        super("Calculator blanao");
+        super("Mihai's Calculator");
         sendUI(this);
         sendDisplay();
         sendButtons();
@@ -49,7 +58,10 @@ public class Calculator extends JFrame {
 
     }
 
+    // Configurare butoane
+
     private void sendButtons() {
+
         seven = new JButton("7");
         eight = new JButton("8");
         nine = new JButton("9");
@@ -65,24 +77,64 @@ public class Calculator extends JFrame {
         parantezaStanga = new JButton("(");
         parantezaDreapta = new JButton(")");
         egal = new JButton("=");
-        undo = new JButton("back");
-        curat = new JButton("C");
+        clear = new JButton("C");
         minus = new JButton("-");
+        inapoi = new JButton("⟲");
+        square = new JButton("x²");
+        radical = new JButton("√");
+        virgula = new JButton(".");
+        procent = new JButton("%");
+        plus = new JButton("+");
+        egal = new JButton("=");
+
+        add(seven);
+        add(eight);
+        add(nine);
+        add(impartire);
+        add(inapoi);
+        add(clear);
+        add(four);
+        add(five);
+        add(six);
+        add(inmultire);
+        add(parantezaStanga);
+        add(parantezaDreapta);
+        add(one);
+        add(two);
+        add(three);
+        add(minus);
+        add(square);
+        add(radical);
+        add(zero);
+        add(virgula);
+        add(procent);
+        add(plus);
+        add(egal);
 
 
         seven.setBounds(20, 100, 50, 50);
         eight. setBounds(90,100,50,50);
         nine.setBounds(160,100,50,50);
         impartire.setBounds(230,100,50,50);
-        curat.setBounds(250,100,50,50);
+        inapoi.setBounds(300,100,50,50);
+        clear.setBounds(370,100,50,50);
         four.setBounds(20,170,50,50);
         five.setBounds(90,170,50,50);
         six.setBounds(160,170,50,50);
+        inmultire.setBounds(230,170,50,50);
+        parantezaStanga.setBounds(300,170,50,50);
+        parantezaDreapta.setBounds(370,170,50,50);
         one.setBounds(20,240,50,50);
         two.setBounds(90,240,50,50);
         three.setBounds(160,240,50,50);
+        minus.setBounds(230,240,50,50);
+        square.setBounds(300,240,50,50);
+        radical.setBounds(370,240,50,50);
         zero.setBounds(20,310,50,50);
-        minus.setBounds(300,100,50,50);
+        virgula.setBounds(90,310,50,50);
+        procent.setBounds(160,310,50,50);
+        plus.setBounds(230,310,50,50);
+        egal.setBounds(300,310,120,50);
 
         seven.addActionListener(new ActionListener() {
                                     @Override
@@ -111,7 +163,6 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "8");
             }
         });
-
         nine.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -125,7 +176,6 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "9");
             }
         });
-
         four.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -139,7 +189,6 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "4");
             }
         });
-
         five.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -153,7 +202,6 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "5");
             }
         });
-
         six.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -167,7 +215,6 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "6");
             }
         });
-
         one.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -181,7 +228,6 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "1");
             }
         });
-
         two.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -195,7 +241,6 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "2");
             }
         });
-
         three.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -209,13 +254,12 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "3");
             }
         });
-
         zero.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if(display.getText().length()>16)
                     return;
-                if(display.getText().equalsIgnoreCase("0")) {
+                if(display.getText().equalsIgnoreCase("0") || display.getText().length() > 16) {
                     display.setText("0");
                     return;
                 }
@@ -223,28 +267,142 @@ public class Calculator extends JFrame {
                     display.setText(display.getText() + "0");
             }
         });
+        virgula.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(display.getText().contains("."))
+                    return;
+                else
+                    display.setText(display.getText() + ".");
+            }
+        });
+        clear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                display.setText("");
+            }
+        });
 
-        add(seven);
-        add(eight);
-        add(nine);
-        add(four);
-        add(five);
-        add(six);
-        add(one);
-        add(zero);
-        add(two);
-        add(three);
-        add(impartire);
-        add(inmultire);
-        add(plus);
-        add(minus);
-        add(egal);
-        add(undo);
-        add(curat);
-        add(parantezaDreapta);
-        add(parantezaStanga);
+        //Operatii
+
+        impartire.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                setTempFirst(Double.parseDouble(display.getText()));
+                if(display.getText().equalsIgnoreCase("0"))
+                    return;
+                else {
+                    operation[0] = true;
+                    display.setText("0");
+                }
+            }
+        });
+        inmultire.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                setTempFirst(Double.parseDouble(display.getText()));
+                operation[1] = true;
+                display.setText("0");
+            }
+        });
+        plus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                setTempFirst(Double.parseDouble(display.getText()));
+                operation[2] = true;
+                display.setText("0");
+            }
+        });
+        minus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                setTempFirst(Double.parseDouble(display.getText()));
+                operation[3]=true;
+                display.setText("0");
+            }
+        });
+        square.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                setTempFirst(Double.parseDouble(display.getText()));
+                setTempSecond(Double.parseDouble(display.getText()));
+                display.setText(display.getText()+"²");
+                operation[4]=true;
+            }
+
+        });
+        procent.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                setTempFirst(Double.parseDouble(display.getText()));
+                operation[5]=true;
+                display.setText("0");
+            }
+        });
+        radical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                operation[6]=true;
+                setTempFirst(Double.parseDouble(display.getText()));
+                display.setText("sqrt("+display.getText()+")");
+            }
+        });
+        egal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(operation[0])
+                {
+                    setTempSecond(Double.parseDouble(display.getText()));
+                    display.setText(Double.toString(getTempRezult() / getTempSecond()));
+                }
+                if(display.getText().endsWith(".0"))
+                    display.setText(display.getText().replace(".0",""));
+                if(operation[1])
+                {
+                    setTempSecond(Double.parseDouble(display.getText()));
+                    display.setText(Double.toString(getTempRezult()*getTempSecond()));
+                }
+                if(display.getText().endsWith(".0"))
+                    display.setText(display.getText().replace(".0",""));
+                if(operation[2])
+                {
+                    setTempSecond(Double.parseDouble(display.getText()));
+                    display.setText(Double.toString(getTempRezult()+getTempSecond()));
+                }
+                if(display.getText().endsWith(".0"))
+                    display.setText(display.getText().replace(".0",""));
+                if(operation[3])
+                {
+                    setTempSecond(Double.parseDouble(display.getText()));
+                    display.setText(Double.toString(getTempRezult()-getTempSecond()));
+                }
+                if(display.getText().endsWith(".0"))
+                    display.setText(display.getText().replace(".0",""));
+                if(operation[4])
+                {
+                    display.setText(Double.toString(getTempRezult()*getTempSecond()));
+                }
+                if(display.getText().endsWith(".0"))
+                    display.setText(display.getText().replace(".0",""));
+                if(operation[5])
+                {
+                    setTempSecond(Double.parseDouble(display.getText()));
+                    display.setText(Double.toString(getTempRezult()%getTempSecond()));
+                }
+                if(operation[6])
+                    display.setText(Double.toString(sqrt(getTempRezult())));
+                if(display.getText().endsWith(".0"))
+                    display.setText(display.getText().replace(".0",""));
+            }
+        });
+
+
+
 
     }
+
+    // Configurare Display (afisaj)
 
     private void sendDisplay() {
         display = new JTextField("0");
@@ -257,15 +415,31 @@ public class Calculator extends JFrame {
 
     }
 
+    // Configurare UI
 
     private void sendUI(Calculator app) {
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setResizable(false);
         app.setLocationRelativeTo(null);
-        app.setSize(450, 600);
+        app.setSize(440, 425);
         app.setVisible(true);
         app.setLayout(null);
 
     }
 
+    public double getTempRezult() {
+        return tempRezult;
+    }
+
+    public void setTempFirst(double tempRezult) {
+        this.tempRezult = tempRezult;
+    }
+
+    public double getTempSecond() {
+        return tempSecond;
+    }
+
+    public void setTempSecond(double tempSecond) {
+        this.tempSecond = tempSecond;
+    }
 }
