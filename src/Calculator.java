@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.*;
 import static java.lang.StrictMath.sqrt;
 
 
@@ -35,10 +34,14 @@ public class Calculator extends JFrame {
     private JButton procent;
     private JButton pozneg;
 
+    // Creare variabile ce memoreaza numerele pe care se efectueaza operatia
+
     private double tempSecond = 0.0;
     private double tempFirst = 0.0;
-    private boolean[] operation = new boolean[10];
 
+    // Vector ce memoreaza operatiile
+
+    private boolean[] operation = new boolean[7];
 
     // Main
 
@@ -61,6 +64,8 @@ public class Calculator extends JFrame {
     // Configurare butoane
 
     private void sendButtons() {
+
+        // Crearea butoanelor
 
         seven = new JButton("7");
         eight = new JButton("8");
@@ -87,6 +92,8 @@ public class Calculator extends JFrame {
         egal = new JButton("=");
         pozneg = new JButton("+/-");
 
+        // Adaugarea butoanelor
+
         add(seven);
         add(eight);
         add(nine);
@@ -111,6 +118,7 @@ public class Calculator extends JFrame {
         add(egal);
         add(pozneg);
 
+        // Dimensiuni si pozitionare pentru butoane
 
         seven.setBounds(20, 100, 50, 50);
         eight. setBounds(90,100,50,50);
@@ -134,6 +142,7 @@ public class Calculator extends JFrame {
         square.setBounds(300,310,50,50);
         radical.setBounds(370,310,50,50);
 
+        // Configurare Butoane
 
         seven.addActionListener(new ActionListener() {
             @Override
@@ -281,12 +290,12 @@ public class Calculator extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 display.setText("0");
                 setTempFirst(0.0);
-                for(int i=0;i<=10;i++)
+                for(int i=0;i<7;i++)
                     operation[i]=false;
             }
         });
 
-        //Operatii
+        // Configurare Operatii
 
         impartire.addActionListener(new ActionListener() {
             @Override
@@ -410,8 +419,6 @@ public class Calculator extends JFrame {
             }
         });
 
-
-
     }
 
     // Configurare Display (afisaj)
@@ -437,6 +444,8 @@ public class Calculator extends JFrame {
         app.setLayout(null);
 
     }
+
+    //Geteri si Seteri pentru operatii
 
     public double getTempFirst() {
         return tempFirst;
