@@ -23,8 +23,6 @@ public class Calculator extends JFrame {
     private JButton impartire;
     private JButton clear;
     private JButton inmultire;
-    private JButton parantezaStanga;
-    private JButton parantezaDreapta;
     private JButton plus;
     private JButton egal;
     private JButton minus;
@@ -79,8 +77,6 @@ public class Calculator extends JFrame {
         three = new JButton("3");
         impartire = new JButton(":");
         inmultire = new JButton("X");
-        parantezaStanga = new JButton("(");
-        parantezaDreapta = new JButton(") egal.setBounds(300,310,120,50);");
         egal = new JButton("=");
         clear = new JButton("C");
         minus = new JButton("-");
@@ -103,8 +99,6 @@ public class Calculator extends JFrame {
         add(five);
         add(six);
         add(inmultire);
-        add(parantezaStanga);
-        add(parantezaDreapta);
         add(one);
         add(two);
         add(three);
