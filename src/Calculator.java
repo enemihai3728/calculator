@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 import static java.lang.StrictMath.sqrt;
 
 
@@ -29,14 +29,14 @@ public class Calculator extends JFrame {
     private JButton plus;
     private JButton egal;
     private JButton minus;
-    private JButton inapoi;
     private JButton square;
     private JButton radical;
     private JButton virgula;
     private JButton procent;
+    private JButton pozneg;
 
     private double tempSecond = 0.0;
-    private double tempRezult = 0.0;
+    private double tempFirst = 0.0;
     private boolean[] operation = new boolean[10];
 
 
@@ -75,23 +75,22 @@ public class Calculator extends JFrame {
         impartire = new JButton(":");
         inmultire = new JButton("X");
         parantezaStanga = new JButton("(");
-        parantezaDreapta = new JButton(")");
+        parantezaDreapta = new JButton(") egal.setBounds(300,310,120,50);");
         egal = new JButton("=");
         clear = new JButton("C");
         minus = new JButton("-");
-        inapoi = new JButton("⟲");
         square = new JButton("x²");
         radical = new JButton("√");
         virgula = new JButton(".");
         procent = new JButton("%");
         plus = new JButton("+");
         egal = new JButton("=");
+        pozneg = new JButton("+/-");
 
         add(seven);
         add(eight);
         add(nine);
         add(impartire);
-        add(inapoi);
         add(clear);
         add(four);
         add(five);
@@ -110,46 +109,46 @@ public class Calculator extends JFrame {
         add(procent);
         add(plus);
         add(egal);
+        add(pozneg);
 
 
         seven.setBounds(20, 100, 50, 50);
         eight. setBounds(90,100,50,50);
         nine.setBounds(160,100,50,50);
         impartire.setBounds(230,100,50,50);
-        inapoi.setBounds(300,100,50,50);
-        clear.setBounds(370,100,50,50);
+        clear.setBounds(300,100,120,50);
         four.setBounds(20,170,50,50);
         five.setBounds(90,170,50,50);
         six.setBounds(160,170,50,50);
         inmultire.setBounds(230,170,50,50);
-        parantezaStanga.setBounds(300,170,50,50);
-        parantezaDreapta.setBounds(370,170,50,50);
+        pozneg.setBounds(300,170,120,50);
         one.setBounds(20,240,50,50);
         two.setBounds(90,240,50,50);
         three.setBounds(160,240,50,50);
         minus.setBounds(230,240,50,50);
-        square.setBounds(300,240,50,50);
-        radical.setBounds(370,240,50,50);
+        egal.setBounds(300,240,120,50);
         zero.setBounds(20,310,50,50);
         virgula.setBounds(90,310,50,50);
         procent.setBounds(160,310,50,50);
         plus.setBounds(230,310,50,50);
-        egal.setBounds(300,310,120,50);
+        square.setBounds(300,310,50,50);
+        radical.setBounds(370,310,50,50);
+
 
         seven.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent actionEvent) {
-                                        if(display.getText().length()>16)
-                                            return;
-                                        if(display.getText().equalsIgnoreCase("0"))
-                                        {
-                                            display.setText("7");
-                                            return;
-                                        }
-                                        else
-                                            display.setText(display.getText() + "7");
-                                    }
-                                });
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(display.getText().length()>16)
+                    return;
+                if(display.getText().equalsIgnoreCase("0"))
+                {
+                    display.setText("7");
+                    return;
+                }
+                else
+                    display.setText(display.getText() + "7");
+            }
+        });
         eight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -274,12 +273,16 @@ public class Calculator extends JFrame {
                     return;
                 else
                     display.setText(display.getText() + ".");
+
             }
         });
         clear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                display.setText("");
+                display.setText("0");
+                setTempFirst(0.0);
+                for(int i=0;i<=10;i++)
+                    operation[i]=false;
             }
         });
 
@@ -324,7 +327,6 @@ public class Calculator extends JFrame {
         square.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                setTempFirst(Double.parseDouble(display.getText()));
                 setTempSecond(Double.parseDouble(display.getText()));
                 display.setText(display.getText()+"²");
                 operation[4]=true;
@@ -344,7 +346,7 @@ public class Calculator extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
 
                 operation[6]=true;
-                setTempFirst(Double.parseDouble(display.getText()));
+                setTempSecond(Double.parseDouble(display.getText()));
                 display.setText("sqrt("+display.getText()+")");
             }
         });
@@ -354,49 +356,59 @@ public class Calculator extends JFrame {
                 if(operation[0])
                 {
                     setTempSecond(Double.parseDouble(display.getText()));
-                    display.setText(Double.toString(getTempRezult() / getTempSecond()));
+                    display.setText(Double.toString(getTempFirst()/getTempSecond()));
                 }
                 if(display.getText().endsWith(".0"))
                     display.setText(display.getText().replace(".0",""));
                 if(operation[1])
                 {
                     setTempSecond(Double.parseDouble(display.getText()));
-                    display.setText(Double.toString(getTempRezult()*getTempSecond()));
+                    display.setText(Double.toString(getTempFirst() * getTempSecond()));
                 }
                 if(display.getText().endsWith(".0"))
                     display.setText(display.getText().replace(".0",""));
                 if(operation[2])
                 {
                     setTempSecond(Double.parseDouble(display.getText()));
-                    display.setText(Double.toString(getTempRezult()+getTempSecond()));
+                    display.setText(Double.toString(getTempFirst()+getTempSecond()));
                 }
                 if(display.getText().endsWith(".0"))
                     display.setText(display.getText().replace(".0",""));
                 if(operation[3])
                 {
                     setTempSecond(Double.parseDouble(display.getText()));
-                    display.setText(Double.toString(getTempRezult()-getTempSecond()));
+                    display.setText(Double.toString(getTempFirst()-getTempSecond()));
                 }
                 if(display.getText().endsWith(".0"))
                     display.setText(display.getText().replace(".0",""));
                 if(operation[4])
                 {
-                    display.setText(Double.toString(getTempRezult()*getTempSecond()));
+                    display.setText(Double.toString(getTempSecond()*getTempSecond()));
                 }
                 if(display.getText().endsWith(".0"))
                     display.setText(display.getText().replace(".0",""));
                 if(operation[5])
                 {
                     setTempSecond(Double.parseDouble(display.getText()));
-                    display.setText(Double.toString(getTempRezult()%getTempSecond()));
+                    display.setText(Double.toString(getTempFirst()%getTempSecond()));
                 }
                 if(operation[6])
-                    display.setText(Double.toString(sqrt(getTempRezult())));
+                    display.setText(Double.toString(sqrt(getTempSecond())));
                 if(display.getText().endsWith(".0"))
                     display.setText(display.getText().replace(".0",""));
             }
         });
-
+        pozneg.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(display.getText().equalsIgnoreCase("0"))
+                    return;
+                else
+                    display.setText(Double.toString(Double.parseDouble(display.getText()) * (-1)));
+                if(display.getText().endsWith(".0"))
+                    display.setText(display.getText().replace(".0",""));
+            }
+        });
 
 
 
@@ -407,9 +419,8 @@ public class Calculator extends JFrame {
     private void sendDisplay() {
         display = new JTextField("0");
         add(display);
-        display.setBounds(50,10,340, 50);
+        display.setBounds(30,22,380, 50);
         display.setEditable(false);
-        display.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         display.setFont(new Font("Arial",Font.PLAIN,30));
 
 
@@ -427,12 +438,12 @@ public class Calculator extends JFrame {
 
     }
 
-    public double getTempRezult() {
-        return tempRezult;
+    public double getTempFirst() {
+        return tempFirst;
     }
 
     public void setTempFirst(double tempRezult) {
-        this.tempRezult = tempRezult;
+        this.tempFirst = tempRezult;
     }
 
     public double getTempSecond() {
